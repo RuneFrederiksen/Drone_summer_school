@@ -12,7 +12,7 @@ rpi_capture_image_mavlink.py: Triggering image captures based on RC MAVLink mess
 RC_CAPTURE = 6 # RX Channel 7
 
 # Exposure min/max supported for Cam v2: 75, 11766829
-CAM_EXPOSURE_TIME = 20000 #in micro seconds, 1000 microsecond => 1ms
+CAM_EXPOSURE_TIME = 1000 #in micro seconds, 1000 microsecond => 1ms
 CAM_GAIN = 1.0 # analogue gain
 CAM_AE = False # Auto Exposure setting. If this is enabled the manual exposure time and gain will be overridden 
 CAM_AWB = True # Auto white balance, in case you do not want to let it auto adjust the white balance
