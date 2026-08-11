@@ -1,7 +1,0 @@
-lognumber - pilot - notes
------------------------------------
-log1 - Nico - No Notes
-log2 - Nico - No Notes
-log3 - Nico - No Notes
-log4 - Rune - No Notes
-log5 - Rune - No Notes
