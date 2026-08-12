@@ -1,0 +1,9 @@
+# Runway 06/24 - Odense Airport (EKOD)
+# Source: AIP Denmark (Naviair), AIRAC AMDT 10/25
+# 2000 m x 45 m, heading 059.8 deg true
+# North edge expanded +22 m into grass (20 m curb buffer + 2 m grass margin)
+# Corners listed clockwise: NW, NE, SE, SW
+55.471156,10.312999
+55.480201,10.340315
+55.479653,10.340673
+55.470608,10.313357
