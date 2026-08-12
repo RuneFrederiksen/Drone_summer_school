@@ -15,6 +15,7 @@ GPS_LOG_NAME = "gps_locations.log"
 
 OUTPUT_FOLDER_NAME = "vision_output"
 OUTPUT_TXT_NAME = "object_gps_locations.txt"
+OUTPUT_MAP_NAME = "object_gps_map.html"
 
 
 # Add MANY representative grass samples here.
@@ -24,6 +25,7 @@ GRASS_COLORS = [
     (130, 129, 108),
     (122, 141, 144)
     
+    
 ]
 
 
@@ -32,7 +34,7 @@ GRASS_DISTANCE_THRESHOLD = 50.0
 
 
 # Ignore small detected regions.
-MINIMUM_OBJECT_AREA = 2000
+MINIMUM_OBJECT_AREA = 5000
 
 
 # ============================================================
@@ -47,7 +49,8 @@ MINIMUM_OBJECT_AREA = 2000
 # 0.01  = 1 cm per pixel
 #
 # Change ONLY this value after calibrating your camera.
-PIXEL_LENGTH_M = 0.00634
+#PIXEL_LENGTH_M = 0.00634
+PIXEL_LENGTH_M = 0.00534
 
 
 # Morphological cleanup.
@@ -656,6 +659,161 @@ def process_image(
     return detections
 
 
+
+# ============================================================
+# CREATE GPS MAP
+# ============================================================
+
+def create_gps_map(txt_path, html_path):
+
+    coordinates = []
+
+    with open(txt_path, "r") as file:
+        for line in file:
+            line = line.strip()
+
+            if not line:
+                continue
+
+            try:
+                latitude, longitude = line.split(",")
+
+                coordinates.append(
+                    (
+                        float(latitude),
+                        float(longitude)
+                    )
+                )
+
+            except ValueError:
+                print(
+                    "Skipping bad GPS line:",
+                    line
+                )
+
+    if not coordinates:
+        print("No object GPS coordinates to put on map.")
+        return
+
+    points_js = ",\n".join(
+        "[{:.8f}, {:.8f}]".format(
+            latitude,
+            longitude
+        )
+        for latitude, longitude in coordinates
+    )
+
+    html = """<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>Object GPS Map</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <style>
+        html, body, #map {{
+            height: 100%;
+            margin: 0;
+        }}
+    </style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+<script>
+
+const points = [
+{points}
+];
+
+const map = L.map("map");
+
+L.tileLayer(
+    "https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png",
+    {{
+        maxZoom: 21,
+        attribution: "&copy; OpenStreetMap contributors"
+    }}
+).addTo(map);
+
+
+const bounds = [];
+
+
+points.forEach(
+    function(point, index) {{
+
+        L.circleMarker(
+            point,
+            {{
+                radius: 5,
+                weight: 2,
+                fillOpacity: 0.8
+            }}
+        )
+        .addTo(map)
+        .bindPopup(
+            "Object " +
+            (index + 1) +
+            "<br>" +
+            point[0].toFixed(8) +
+            ", " +
+            point[1].toFixed(8)
+        );
+
+        bounds.push(point);
+    }}
+);
+
+
+if (bounds.length > 0) {{
+
+    map.fitBounds(
+        bounds,
+        {{
+            padding: [20, 20]
+        }}
+    );
+}}
+
+</script>
+
+</body>
+</html>
+""".format(
+        points=points_js
+    )
+
+    with open(
+        html_path,
+        "w",
+        encoding="utf-8"
+    ) as file:
+
+        file.write(html)
+
+    print(
+        "Map created:",
+        html_path
+    )
+
+
 # ============================================================
 # MAIN
 # ============================================================
@@ -794,6 +952,16 @@ def main():
                     detection["object_lon"]
                 )
             )
+
+    map_path = os.path.join(
+        output_folder,
+        OUTPUT_MAP_NAME
+    )
+
+    create_gps_map(
+        txt_path,
+        map_path
+    )
 
     print()
     print("Finished")

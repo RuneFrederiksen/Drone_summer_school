@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>Object GPS Map</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+<script>
+
+const points = [
+[55.47628977, 10.32844146],
+[55.47630488, 10.32845292],
+[55.47651338, 10.32851370],
+[55.47648700, 10.32855030],
+[55.47646846, 10.32853370],
+[55.47648077, 10.32855244]
+];
+
+const map = L.map("map");
+
+L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+        maxZoom: 21,
+        attribution: "&copy; OpenStreetMap contributors"
+    }
+).addTo(map);
+
+
+const bounds = [];
+
+
+points.forEach(
+    function(point, index) {
+
+        L.circleMarker(
+            point,
+            {
+                radius: 5,
+                weight: 2,
+                fillOpacity: 0.8
+            }
+        )
+        .addTo(map)
+        .bindPopup(
+            "Object " +
+            (index + 1) +
+            "<br>" +
+            point[0].toFixed(8) +
+            ", " +
+            point[1].toFixed(8)
+        );
+
+        bounds.push(point);
+    }
+);
+
+
+if (bounds.length > 0) {
+
+    map.fitBounds(
+        bounds,
+        {
+            padding: [20, 20]
+        }
+    );
+}
+
+</script>
+
+</body>
+</html>
