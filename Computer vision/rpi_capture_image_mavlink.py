@@ -21,7 +21,9 @@ CAM_AWB = True # Auto white balance, in case you do not want to let it auto adju
 ALTITUDE_M = 10.0            # Camera height above the ground in meters
 PIXEL_TO_M_AT_1M = 0.0012    # Ground meters per pixel when altitude = 1 meter
 REFERENCE_COLORS = [
-    (80, 120, 80),           # BGR grass reference color - CHANGE THIS
+    (60, 104, 73),
+    (180, 177, 172),
+    (99, 135, 89)           # BGR grass reference color - CHANGE THIS
 ]
 COLOR_THRESHOLD = 60
 MINIMUM_OBJECT_AREA = 200
@@ -206,10 +208,7 @@ class DroneControl:
             except TypeError:
                 self.print_debug('WARN: No GPS fix... skipping file save')
                 pass
-            self.index += 1
-
-            # self.debounce = True
-            time.sleep(5)
+            self.index += 1    
 
     def create_folder(self):
         count = 0

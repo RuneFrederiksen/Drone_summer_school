@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import cv2
 import numpy as np
 import os
@@ -203,3 +204,63 @@ class ObjectDetector:
 
         return detections, thresholded_image, output
 
+grass_colors = [
+    (60, 104, 73),
+    (180, 177, 172),
+    (99, 135, 89),
+]
+
+detector = ObjectDetector(
+    reference_colors=grass_colors,
+    threshold=60,
+    minimum_area=2000
+)
+
+# Image to test
+image_path = "/home/pi/images/capture_17/img_5.jpg"
+
+image = cv2.imread(image_path)
+
+if image is None:
+    raise FileNotFoundError(image_path)
+
+
+# Fake drone data for testing
+drone_lat = 55.3682
+drone_lon = 10.4281
+drone_altitude = 20.0
+drone_heading = 90.0
+
+# (latitude, longitude, unused altitude, heading)
+drone_position = (
+    drone_lat,
+    drone_lon,
+    drone_altitude,
+    drone_heading
+)
+
+# Example camera scale:
+# meters per pixel when camera is 1 meter above ground
+pixel_to_m_at_1m = 0.001
+
+
+# Process image
+detections, thresholded_image, output = detector.process_image(
+    image,
+    "img_4",
+    drone_position=drone_position,
+    altitude_m=drone_altitude,
+    pixel_to_m_at_1m=pixel_to_m_at_1m
+)
+
+
+# Print detected objects
+for i, detection in enumerate(detections):
+    print(f"Object {i + 1}")
+    print(f"Pixel center: {detection['center_pixel']}")
+
+    if "gps" in detection:
+        print(f"GPS: {detection['gps']}")
+        print(f"Offset: {detection['offset_m']} meters")
+
+    print()

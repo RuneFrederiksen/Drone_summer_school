@@ -135,7 +135,7 @@ class DroneControl:
             self.index += 1
 
             # self.debounce = True
-            time.sleep(5)
+            time.sleep(0.5)
 
     def create_folder(self):
         count = 0
