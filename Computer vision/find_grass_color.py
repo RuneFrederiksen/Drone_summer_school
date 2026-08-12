@@ -1,6 +1,6 @@
 import cv2
 
-image_path = "capture_17\img_1.jpg"
+image_path = "capture_2\img_5.jpg"
 
 image = cv2.imread(image_path)
 

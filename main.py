@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import os
 import math
-import csv
 import re
 
 
@@ -10,29 +9,26 @@ import re
 # SETTINGS
 # ============================================================
 
-CAPTURE_FOLDER = "capture_17"
+CAPTURE_FOLDER = "capture_2"
 
 GPS_LOG_NAME = "gps_locations.log"
 
 OUTPUT_FOLDER_NAME = "vision_output"
-OUTPUT_CSV_NAME = "object_locations.csv"
+OUTPUT_TXT_NAME = "object_gps_locations.txt"
 
 
 # Add MANY representative grass samples here.
 # Format is BGR because OpenCV uses BGR.
 GRASS_COLORS = [
-    (60, 104, 73),
-    (99, 135, 89),
-    (80, 120, 70),
-    (70, 110, 60),
-    (110, 145, 95),
-    (55, 90, 50),
-    (130, 155, 110),
+    (94, 90, 85),
+    (130, 129, 108),
+    (122, 141, 144)
+    
 ]
 
 
 # Larger = more pixels accepted as grass.
-GRASS_DISTANCE_THRESHOLD = 150.0
+GRASS_DISTANCE_THRESHOLD = 50.0
 
 
 # Ignore small detected regions.
@@ -51,7 +47,7 @@ MINIMUM_OBJECT_AREA = 2000
 # 0.01  = 1 cm per pixel
 #
 # Change ONLY this value after calibrating your camera.
-PIXEL_LENGTH_M = 0.00584
+PIXEL_LENGTH_M = 0.00634
 
 
 # Morphological cleanup.
@@ -785,61 +781,19 @@ def main():
         )
 
 
-    csv_path = os.path.join(
+    txt_path = os.path.join(
         output_folder,
-        OUTPUT_CSV_NAME
+        OUTPUT_TXT_NAME
     )
 
-
-    fieldnames = [
-
-        "image",
-
-        "object",
-
-        "center_x",
-
-        "center_y",
-
-        "area",
-
-        "drone_lat",
-
-        "drone_lon",
-
-        "heading",
-
-        "object_lat",
-
-        "object_lon",
-
-        "north_offset_m",
-
-        "east_offset_m"
-    ]
-
-
-    with open(
-        csv_path,
-        "w",
-        newline=""
-    ) as file:
-
-        writer = csv.DictWriter(
-            file,
-            fieldnames=fieldnames
-        )
-
-
-        writer.writeheader()
-
-
+    with open(txt_path, "w") as file:
         for detection in all_detections:
-
-            writer.writerow(
-                detection
+            file.write(
+                "{:.8f},{:.8f}\n".format(
+                    detection["object_lat"],
+                    detection["object_lon"]
+                )
             )
-
 
     print()
     print("Finished")
