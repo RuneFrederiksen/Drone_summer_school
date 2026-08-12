@@ -1,0 +1,27 @@
+[project]
+name = "animal-detection"
+version = "0.1.0"
+description = "Drone animal detection using classical computer vision"
+readme = "README.md"
+authors = [
+    { name = "Hamstale", email = "nico.gall@live.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.5.1",
+    "opencv-python>=5.0.0.93",
+    "pillow>=12.3.0",
+]
+
+[project.scripts]
+animal-detection = "animal_detection.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.12.2,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+package = true
+
+[tool.uv_build]
+module-name = "animal_detection"

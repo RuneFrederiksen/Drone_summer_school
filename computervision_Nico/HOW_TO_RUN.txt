@@ -1,0 +1,30 @@
+Install dependencies (run once):
+    uv sync
+
+Run the detection pipeline:
+    uv run python -m animal_detection.cli
+
+That's it. The program will automatically:
+  - Find any capture folder(s) inside input/
+  - Load the gps_locations.log from each capture folder
+  - Apply the runway exclusion zone (input/ekod_runway_06_24.csv) if present
+  - Save results to output/<capture_folder_name>/detections_map.html
+
+Folder structure expected:
+    computervision_Nico/
+      input/
+        ekod_runway_06_24.csv       <- runway exclusion zone (included)
+        capture_8/
+          gps_locations.log
+          img_0.jpg
+          img_1.jpg
+          ...
+        capture_17/
+          gps_locations.log
+          img_0.jpg
+          ...
+      output/                       <- created automatically
+
+If images were taken at low altitude during setup/takeoff, skip them with:
+    uv run python -m animal_detection.cli --min-altitude 20
+(GPS altitude is sea level at EKOD, ground level is ~18 m)
