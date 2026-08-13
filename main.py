@@ -30,7 +30,7 @@ GRASS_COLORS = [
 
 
 # Larger = more pixels accepted as grass.
-GRASS_DISTANCE_THRESHOLD = 50.0
+GRASS_DISTANCE_THRESHOLD = 30.0
 
 
 # Ignore small detected regions.

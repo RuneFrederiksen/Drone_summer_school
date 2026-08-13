@@ -11,3 +11,9 @@ log8 - Tahseen - No Notes
 log9 - Nico - No Notes
 log10 - Nico - No Notes
 log11 - Nico - No Notes
+log12 - Nico - No Notes
+log13 - Nico - No Notes
+log14 - Nico - No Notes
+log15 - Nico - No Notes
+log16 - Nico - No Notes
+log17 - Rune - No Notes
